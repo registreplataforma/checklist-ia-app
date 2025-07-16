@@ -1,0 +1,39 @@
+# Nome do Workflow
+name: Deploy to Vercel
+
+# Controla quando o workflow será executado
+on:
+  # Dispara o workflow em pushes para a branch "main"
+  push:
+    branches: [ "main" ]
+
+# Define os jobs que serão executados
+jobs:
+  # Job único chamado "deploy-to-vercel"
+  deploy-to-vercel:
+    # O tipo de máquina que o job irá rodar
+    runs-on: ubuntu-latest
+
+    # Passos que serão executados no job
+    steps:
+      # 1. Faz o checkout do seu código do repositório
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18' # Você pode usar 18 ou 20
+
+      # 3. Instala as dependências do projeto
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Faz o deploy para a Vercel
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20 # Action oficial da Vercel
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
